@@ -7,3 +7,6 @@ Add-on for the Anki program. For the window with add-ons, it implements the abil
 ![Anki_Add-ons window_v10_04](https://github.com/user-attachments/assets/aaa83b61-6242-42f5-9b5c-e66cabc0af49)
 
 All this functionality simplifies working with add-ons, since you can highlight important ones with color, you can set a hint after the name or a hint before the name (group name). Sorting allows you to see which add-ons are newer (older) or with which add-on we recently changed the setting (changing the color, hint does not change the date of the meta.json file, although it stores this information there).
+
+If you have a question or suggestion, do not create an issue on this site, but go to the dedicated topic [on the forum](https://forums.ankiweb.net/t/add-ons-window-sort-colors-hint-official-support/58646)
+
