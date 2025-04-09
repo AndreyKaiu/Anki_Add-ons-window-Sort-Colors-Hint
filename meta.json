@@ -1,13 +1,12 @@
 {
-    "name": "Add-ons window – ⬇️Sort, 🎨Colors, ✍️Hint",
-    "human_version": "1.0",
-    "mod": 1744048680,
-    "min_point_version": 50,
-    "max_point_version": 0,
-    "branch_index": "main",
+    "name": "Add-ons window  Sort Colors Hint",    
+    "mod": 1744221985,
+    "min_point_version": 1,
+    "max_point_version": 250200,
+    "branch_index": 0,
     "disabled": false,
-    "conflicts": [],
+    "human_version": "1.1",
     "update_enabled": true,
-    "mark_color": "#ff007f",
-    "hint": ""
+    "hint": "your hint",
+    "mark_color": "#ff007f"
 }

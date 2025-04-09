@@ -2,7 +2,7 @@
 # Add-on for the Anki program. For the window with add-ons, it implements the ability 
 # to sort and color the list, it is possible to set a hint for a specific add-on.
 # https://github.com/AndreyKaiu/Anki_Add-ons-window-Sort-Colors-Hint
-# Version 1.0
+# Version 1.1, date: 2025-04-09
 import sys
 import traceback
 import os
@@ -241,6 +241,10 @@ def custom_redrawAddons(self):
     for addon in self.addons:
         meta_path = os.path.join(mgr.addonsFolder(), addon.dir_name, "meta.json")
         manifest_path = os.path.join(mgr.addonsFolder(), addon.dir_name, "manifest.json")
+
+        if not hasattr(addon, "provided_name") or addon.provided_name is None:
+            addon.provided_name = "" # создаем, если такого атрибута почему-то нет
+
         user_hint = ""
         mark_color = "#000000"
         mod_timestamp_upd = 0
@@ -371,8 +375,13 @@ def custom_redrawAddons(self):
     for addon in self.addons:
         name = self.name_for_addon_list(addon)
         item = QListWidgetItem(name, addonList)
+        if not hasattr(addon, "date_info") or addon.date_info is None:
+            addon.date_info = "" # создаем, если такого атрибута почему-то нет
         item.setToolTip(addon.date_info)  # Устанавливаем всплывающую подсказку                   
- 
+        
+        if not hasattr(addon, "mark_color") or addon.mark_color is None:
+            addon.mark_color = "#000000" # создаем, если такого атрибута почему-то нет
+
         if addon.mark_color not in ("#000000", "#ffffff", "#FFFFFF", ""): # раскрашиваем если не белый и не черный                    
             item.setForeground(QColor(addon.mark_color))
         else:
@@ -595,6 +604,9 @@ def mark_item_list(addons_list, dialog):
             open1 = True
             # Открыть диалог выбора цвета
             colorCur = QColor("#ffffff")
+            if not hasattr(addon, "mark_color") or addon.mark_color is None:
+                addon.mark_color = "#000000" # создаем, если такого атрибута почему-то нет
+
             try:
                 colorCur = QColor(addon.mark_color)
             except Exception as e: pass
@@ -660,6 +672,8 @@ def hint_item_list(addons_list, dialog):
         
         if not open1:             
             open1 = True
+            if not hasattr(addon, "user_hint") or addon.user_hint is None:
+                addon.user_hint = "" # создаем, если такого атрибута почему-то нет
             # Открыть диалог ввода строки hint в переменную user_hint   
             hint = localizationF("Hint","✍️ Hint")  
             hint_t = localizationF("Hint_tooltip","Enter brief information that is understandable to you")       
