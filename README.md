@@ -10,3 +10,7 @@ All this functionality simplifies working with add-ons, since you can highlight 
 
 If you have a question or suggestion, do not create an issue on this site, but go to the dedicated topic [on the forum](https://forums.ankiweb.net/t/add-ons-window-sort-colors-hint-official-support/58646)
 
+**VERSIONS**
+- 1.1, date: 2025-04-09. Fixed a bug that occurred if the add-on name was None (Thank you [https://ankiweb.net/shared/by-author/2063726776](https://ankiweb.net/shared/by-author/2063726776))
+- 1.0, date: 2025-04-07. First release
+
