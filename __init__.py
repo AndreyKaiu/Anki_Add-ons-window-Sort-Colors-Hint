@@ -2,17 +2,17 @@
 # Add-on for the Anki program. For the window with add-ons, it implements the ability 
 # to sort and color the list, it is possible to set a hint for a specific add-on.
 # https://github.com/AndreyKaiu/Anki_Add-ons-window-Sort-Colors-Hint
-# Version 1.1, date: 2025-04-09
+# Version 1.2, date: 2025-04-18
 import sys
 import traceback
 import os
+import re
 import json
 import time
 import aqt
 import aqt.forms
 import aqt.main
 import anki.lang
-from aqt.utils import showText
 from aqt.addons import AddonsDialog
 from aqt import mw
 from aqt.addons import AddonManager
@@ -23,8 +23,8 @@ from aqt.qt import *
 from aqt.qt import QApplication
 from aqt.gui_hooks import addons_dialog_will_show
 from aqt.gui_hooks import addons_dialog_did_change_selected_addon
-from aqt.utils import askUser
-from aqt.utils import tooltip
+from aqt.gui_hooks import dialog_manager_did_open_dialog
+from aqt.utils import (askUser, showInfo, tooltip, showText, tr)
 from aqt.theme import theme_manager
 from datetime import datetime
 from pathlib import Path
@@ -32,19 +32,15 @@ from pathlib import Path
 # ========================= PYQT_VERSION ======================================
 try:
     from PyQt6.QtWidgets import QListWidgetItem
-    from PyQt6.QtCore import Qt, QSize
-    from PyQt6.QtWidgets import QStyledItemDelegate, QListWidgetItem, QListWidget, QDialog, QVBoxLayout
-    from PyQt6.QtGui import QColor
-    from PyQt6.QtCore import QTimer
-    from PyQt6.QtGui import QPainter, QColor, QPalette
+    from PyQt6.QtCore import Qt, QTimer, QRegularExpression
+    from PyQt6.QtWidgets import QStyledItemDelegate, QListWidgetItem, QTextEdit, QListWidget, QDialog, QVBoxLayout
+    from PyQt6.QtGui import QColor, QSyntaxHighlighter, QPainter, QPalette, QTextCharFormat, QFont   
     pyqt_version = "PyQt6"
 except ImportError:
     from PyQt5.QtWidgets import QListWidgetItem
-    from PyQt5.QtCore import Qt
-    from PyQt5.QtWidgets import QStyledItemDelegate, QListWidgetItem, QListWidget, QDialog, QVBoxLayout
-    from PyQt5.QtGui import QColor
-    from PyQt5.QtCore import QTimer
-    from PyQt5.QtGui import QPainter, QColor, QPalette
+    from PyQt5.QtCore import Qt, QTimer, QRegularExpression
+    from PyQt5.QtWidgets import QStyledItemDelegate, QListWidgetItem, QTextEdit, QListWidget, QDialog, QVBoxLayout
+    from PyQt5.QtGui import QColor, QSyntaxHighlighter, QPainter, QPalette, QTextCharFormat, QFont
     pyqt_version = "PyQt5"  
 # =============================================================================
 
@@ -102,11 +98,9 @@ try:
     current_sort_flag = configF("GLOBAL_SETTINGS","sorting_type", 0)
 except Exception as e: logError(e)
 
-
     
 
 # =============================================================================   
-
 
 # Сохраняем оригинальный метод (из anki-main\qt\aqt\addons.py)
 original_redraw = AddonsDialog.redrawAddons
@@ -154,6 +148,326 @@ def setCurrentItem(dialog, curAddon):
 addons_dialog_did_change_selected_addon.append(change_selected_addon)                
 # Подключаемся к хуку addons_dialog_will_show
 addons_dialog_will_show.append(dialog_will_show)
+
+
+
+# ============================================================================= 
+colorsHL = {
+    "dark": {
+        "number": "#ffaea8",
+        "const": "#569cd6",
+        "brace": "#cccccc",
+        "brace1": "#bb0000",
+        "brace2": "#ffff00",
+        "brace3": "#fc4e77",
+        "brace4": "#179fff",
+        "key": "#007acc",
+        "key1": "#009aaa",
+        "key2": "#999999",
+        "string": "#d69d85"
+    },
+    "light": {
+        "number": "#ffaea8",
+        "const": "#569cd6",
+        "brace": "#000000",
+        "brace1": "#bb0000",
+        "brace2": "#e80af7",
+        "brace3": "#fc4e77",
+        "brace4": "#179fff",
+        "key": "#007acc",
+        "key1": "#009aaa",
+        "key2": "#999999",
+        "string": "#7d3618"
+    }
+}
+
+
+
+class JsonHighlighter(QSyntaxHighlighter):
+    def __init__(self, document, editor=None):
+        super().__init__(document)
+        self.editor = editor
+        self.selected_text = ""
+        self.rules = []
+
+        theme = "dark" if theme_night else "light"
+        
+        # Числа
+        number_format = self.format(QColor(colorsHL[theme]["number"]))
+        self.rules.append((QRegularExpression(r'(?<=[^#])\b(\d+(\.\d+)?)\b'), number_format))
+
+        # Булевы и null
+        const_format = self.format(QColor(colorsHL[theme]["const"]), italic=True)
+        self.rules.append((QRegularExpression(r'\b(true|false|null)\b'), const_format))
+
+        # Скобки и запятые
+        brace_format = self.format(QColor(colorsHL[theme]["brace"]))
+        for symbol in r'()\,.:':
+            self.rules.append((QRegularExpression(rf'(\{symbol})'), brace_format))
+
+        brace1_format = self.format(QColor(colorsHL[theme]["brace1"]))
+        for symbol in r'.;':
+            self.rules.append((QRegularExpression(rf'(\{symbol})'), brace1_format))
+
+        brace2_format = self.format(QColor(colorsHL[theme]["brace2"]), bold=True)    
+        for symbol in r'{}':
+            self.rules.append((QRegularExpression(rf'(\{symbol})'), brace2_format))
+        brace3_format = self.format(QColor(colorsHL[theme]["brace3"]), bold=True)    
+        for symbol in r'[]':
+            self.rules.append((QRegularExpression(rf'(\{symbol})'), brace3_format))
+        brace4_format = self.format(QColor(colorsHL[theme]["brace4"]), bold=True)    
+        for symbol in r'()':
+            self.rules.append((QRegularExpression(rf'(\{symbol})'), brace4_format))
+
+        # Строки: "значение"
+        string_format = self.format(QColor(colorsHL[theme]["string"]))
+        self.rules.append((QRegularExpression(r'("([^"\\]|\\.)*")'), string_format))
+
+        # Ключи: "ключ"
+        key_format = self.format(QColor(colorsHL[theme]["key"]), bold=True)
+        self.rules.append((QRegularExpression(r'("([^"\\]|\\.)*")\s*:'), key_format))      
+
+        # Ключи: {
+        key1_format = self.format(QColor(colorsHL[theme]["key1"]), bold=True)
+        self.rules.append((QRegularExpression(r'("([^"\\]|\\.)*")\s*:\s*\{'), key1_format))       
+
+        # Ключи ?: "ключ"
+        key2_format = self.format(QColor(colorsHL[theme]["key2"]))
+        self.rules.append((QRegularExpression(r'("([^"\\]|\\.)* \?"\s*:)'), key2_format))  
+        self.rules.append((QRegularExpression(r'( \?"\s*:\s*"([^"\\]|\\.)*")'), key2_format))  
+
+    def setSelectedText(self, text):
+            self.selected_text = text    
+        
+    def format(self, color_hex, bold=False, italic=False, color_back=None):
+        fmt = QTextCharFormat()
+        fmt.setForeground(QColor(color_hex))
+        if not color_back == None:
+            fmt.setBackground(QColor(color_back))
+        if bold:
+            fmt.setFontWeight(QFont.Weight.Bold)
+        if italic:
+            fmt.setFontItalic(True)
+        return fmt
+
+    def highlightBlock(self, text):
+        for pattern, fmt in self.rules:
+            match_iter = pattern.globalMatch(text)
+            while match_iter.hasNext():
+                match = match_iter.next()
+                if match.lastCapturedIndex() >= 1:
+                    # Есть захваченная группа (например, строка)
+                    start = match.capturedStart(1)
+                    length = match.capturedLength(1)
+                    self.setFormat(start, length, fmt)
+
+        # Подсветка строк с цветами
+        color_regex = QRegularExpression(r'"([#a-zA-Z0-9]{3,20})"')
+        color_iter = color_regex.globalMatch(text)
+        while color_iter.hasNext():
+            match = color_iter.next()
+            color_code = match.captured(1)
+            qcolor = QColor(color_code)
+
+            if not qcolor.isValid():
+                continue
+
+            fmt = QTextCharFormat()
+            fmt.setBackground(qcolor)
+
+            # Автоматически выбираем белый/чёрный текст по яркости
+            if qcolor.lightness() < 128:
+                fmt.setForeground(Qt.GlobalColor.white)
+            else:
+                fmt.setForeground(Qt.GlobalColor.black)
+
+            # Подсветка только содержимого (без кавычек)
+            self.setFormat(match.capturedStart(1), match.capturedLength(1), fmt)
+
+        # Подсветка выделенного текста
+        if self.selected_text and len(self.selected_text) >= 1:
+            fmt = QTextCharFormat()
+            if theme_night:
+                fmt.setBackground(QColor("#5e5e30"))
+                fmt.setForeground(QColor("black"))
+            else:
+                fmt.setBackground(QColor("#cfcf6d"))
+                fmt.setForeground(QColor("black"))
+
+            pattern = QRegularExpression(re.escape(self.selected_text))
+            match_iter = pattern.globalMatch(text)
+            while match_iter.hasNext():
+                match = match_iter.next()
+                start = match.capturedStart()
+                length = match.capturedLength()
+                self.setFormat(start, length, fmt)
+            # особо для парных
+            if len(self.selected_text) == 1:
+                strp1 = "{[(<}])>"
+                strp2 = "}])>{[(<"
+                findp = strp1.find(self.selected_text)
+                if findp >= 0:              
+                    fmt = QTextCharFormat()
+                    if theme_night:
+                        fmt.setBackground(QColor("#cfcf6d"))
+                        fmt.setForeground(QColor("#e80af7"))
+                    else:
+                        fmt.setBackground(QColor("#cfcf6d"))
+                        fmt.setForeground(QColor("#e80af7"))
+
+                    pattern = QRegularExpression(re.escape( strp2[findp] ))
+                    match_iter = pattern.globalMatch(text)
+                    while match_iter.hasNext():
+                        match = match_iter.next()
+                        start = match.capturedStart()
+                        length = match.capturedLength()
+                        self.setFormat(start, length, fmt)
+                
+
+
+def patch_config_editor(dialog: QDialog):
+    """изменения для редактора конфига """
+    dialog.form.editor.setStyleSheet("font-family: Consolas; font-size: 12pt;")       
+    try:
+        font = QFont("Consolas")
+        font.setPointSize(10)
+        dialog.form.editor.setFont(font)
+        highlighter = JsonHighlighter(dialog.form.editor.document(), editor=dialog.form.editor)
+        dialog.form.editor.highlighter = highlighter
+
+        # Подключаем сигнал изменения курсора
+        def on_cursor_changed():
+            text = dialog.form.editor.textCursor().selectedText()
+            highlighter.setSelectedText(text)
+            highlighter.rehighlight()
+        dialog.form.editor.cursorPositionChanged.connect(on_cursor_changed)
+
+        setup_context_menu_json(dialog.form.editor, dialog) # создаем контекстное меню
+
+    except Exception as e:
+        print(f"[json_highlighter] Ошибка: {e}") 
+
+
+def intercept_on_config(dialog: AddonsDialog):  
+    """Перехват конфигурации"""  
+    original_on_config = dialog.onConfig
+
+    def custom_on_config():        
+        addon = dialog.onlyOneSelected()
+        if not addon:
+            return
+
+        act = dialog.mgr.configAction(addon)
+        if act and act() is not False:
+            return
+
+        conf = dialog.mgr.getConfig(addon)
+        if conf is None:
+            showInfo(tr.addons_addon_has_no_configuration())
+            return
+
+        editor = aqt.addons.ConfigEditor(dialog, addon, conf)
+        patch_config_editor(editor)
+       
+
+    dialog.onConfig = custom_on_config
+
+    # Переподключаем кнопки и двойной клик
+    try:
+        dialog.form.config.clicked.disconnect()
+    except Exception:
+        pass
+    dialog.form.config.clicked.connect(custom_on_config)
+
+    try:
+        dialog.form.addonList.itemDoubleClicked.disconnect()
+    except Exception:
+        pass
+    dialog.form.addonList.itemDoubleClicked.connect(custom_on_config)
+
+addons_dialog_will_show.append(intercept_on_config)
+
+
+
+findStrJson = "" # подстрока которую будем искать
+def findF3Json(editor, dialog):    
+    """Для JSON поиск подстроки ранее запомненной"""
+    global findStrJson
+    if not findStrJson:
+        return
+    
+    cursor = editor.textCursor()
+    document = editor.document()
+
+    # Начинаем поиск с текущей позиции +1
+    start_pos = cursor.position() + 1
+    found_cursor = document.find(findStrJson, start_pos)
+
+    if found_cursor.isNull():
+        # Повторный поиск с начала
+        notfound = localizationF("notfound", "Not found")
+        tooltip(f"<p style='color: yellow; background-color: black'>{notfound}. ⏮️</p>")
+        found_cursor = document.find(findStrJson, 0)
+
+    if not found_cursor.isNull():
+        editor.setTextCursor(found_cursor)
+        editor.centerCursor()
+    else:
+        notfound = localizationF("notfound", "Not found")
+        tooltip(f"<p style='color: yellow; background-color: black'>{notfound}</p>")
+
+
+def findJson(editor, dialog):  
+    """Для JSON поиск подстроки и запомним подстроку в findStrJson"""     
+    global findStrJson
+    find = localizationF("Find", "Find a substring")
+    find_t = localizationF("Find_tooltip", "Enter a substring")
+    user_find = ask_user_for_text(dialog, find, find_t, findStrJson) # ввод от пользователя строки 
+    if user_find is None or not user_find.strip():
+        return
+    findStrJson = user_find
+    findF3Json(editor, dialog)   
+
+
+
+# формируем контекстное меню для редактора JSON
+def setup_context_menu_json(editor, dialog):
+    """Настраивает контекстное меню для конфигурации дополнения."""
+    def show_context_menu_json(position):
+        # Получаем стандартное меню
+        menu = editor.createStandardContextMenu()
+
+        # Добавляем разделительную линию
+        menu.addSeparator()   
+
+        # Добавляем пункт меню для поиска 
+        find_action = QAction(localizationF("Find","Find a substring")+"...", menu)
+        find_action.setToolTip(localizationF("Find_tooltip","Enter a substring"))
+        find_action.setShortcut("Ctrl+F")
+        find_action.triggered.connect(lambda: findJson(editor, dialog))
+        menu.addAction(find_action)
+        dialog.addAction(find_action)
+
+        # Добавляем пункт меню для поиска F3 
+        findF3_action = QAction(localizationF("FindF3","Search next"), menu)
+        findF3_action.setToolTip(localizationF("FindF3_tooltip","Repeat search for substring"))
+        findF3_action.setShortcut("F3")
+        findF3_action.triggered.connect(lambda: findF3Json(editor, dialog))
+        menu.addAction(findF3_action)
+        dialog.addAction(findF3_action)
+
+        # Показываем меню в позиции курсора
+        menu.exec(editor.viewport().mapToGlobal(position))
+
+    
+    # Устанавливаем политику контекстного меню
+    editor.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+    editor.customContextMenuRequested.connect(show_context_menu_json)
+    QShortcut(QKeySequence("Ctrl+F"), editor, lambda: findJson(editor, dialog))
+    QShortcut(QKeySequence("F3"), editor, lambda: findF3Json(editor, dialog))
+
+# ============================================================================= 
+
 
 
 
@@ -222,6 +536,7 @@ def safe_split_N(s: str, sep: str, n: int, first_missed: bool = False) -> list[s
 
     
     
+
 
 
 def custom_redrawAddons(self):  
@@ -484,6 +799,14 @@ def setup_context_menu(addons_list, dialog):
     menu.addAction(sort2_action)  
     dialog.addAction(sort2_action)  
 
+    # добавляем пункт как у кнопки toggleEnabled
+    toggleEnabled_action = QAction(dialog.form.toggleEnabled.text(), menu)
+    toggleEnabled_action.setToolTip(dialog.form.toggleEnabled.text())
+    toggleEnabled_action.setShortcut("F9")
+    toggleEnabled_action.triggered.connect(lambda: dialog.form.toggleEnabled.click())
+    menu.addAction(toggleEnabled_action)  
+    dialog.addAction(toggleEnabled_action) 
+
     # Добавляем разделительную линию
     menu.addSeparator()
 
@@ -511,6 +834,8 @@ def setup_context_menu(addons_list, dialog):
     id_to_clb_action.triggered.connect(lambda: id_selected_addons_to_clipboard(addons_list, dialog))
     menu.addAction(id_to_clb_action)  
     dialog.addAction(id_to_clb_action)  
+
+    
 
 
     # Устанавливаем политику контекстного меню
