@@ -1,17 +1,18 @@
 {
-    "GLOBAL_SETTINGS": {
+    "GLOBAL_SETTINGS": {        
         "language": "",
         "language ?": "Language (title from 'LOCALIZATION', default '' - auto detection)",
         "sorting_type": 0,
         "sorting_type ?": "0 or 1 or 2 (default 0)"
-    },
+    },    
     "LOCALIZATION": {
-        "en": {
-            "Auto_update": "Auto_update",
+        "en": {            
+            "Auto_update": "Auto_update_NEW",
             "Created": "created",
             "Find": "🔍 Find a substring",
             "FindF3": "🔍⬇️ Search next",
             "FindF3_tooltip": "Repeat search for substring",
+            "FindShiftF3": "🔍⬆️ Search Previous",
             "Find_tooltip": "Enter a substring",
             "Hint": "✍️ Hint",
             "Hint_tooltip": "Enter brief information that you understand \n(or format: #before#after or commands: -# (delete everything before) -## (delete everything after)\n -substring_to_delete +substring_to_add)",
@@ -35,14 +36,22 @@
             "auto_updateYes_tooltip": "All selected add-ons will be updated automatically",
             "download_addons": "Attention! There is already one of the add-ons in the list. Should we replace it?",
             "notfound": "Not found",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",            
+            "status_label": "Total replacements",
+            "status_label_ToolTip": "The last line will be saved",
+            "Search_previous_repl": "Search for previous replacement",
+            "Search_next_repl": "Searching for the next replacement",
+            "Restart_Anki": "🔄 Restart Anki",
+            "Save_the_current": "Save the current selection of active add-ons to the profile whose number you click after this button",
+            "Profile_of_allowed": "Profile of allowed add-ons (bold - loaded in anki)"
         },
-        "ru": {
+        "ru": {            
             "Auto_update": "Автообновление",
             "Created": "cоздан",
             "Find": "🔍 Найти подстроку",
             "FindF3": "🔍⬇️ Искать далее",
             "FindF3_tooltip": "Повтор поиска подстроки",
+            "FindShiftF3": "🔍⬆️ Искать ранее",
             "Find_tooltip": "Введите подстроку",
             "Hint": "✍️ Подсказка",
             "Hint_tooltip": "Введите краткую информацию понятную вам \n(или формат: #до#после или команды: -# (удалить всё до) -## (удалить все после)\n -удаляемая_подстрока +добавляемая_подстрока)",
@@ -66,14 +75,23 @@
             "auto_updateYes_tooltip": "Все выбранные дополнения будут обновлены автоматически",
             "download_addons": "Внимание! В списке уже есть одно из дополнений. Будем заменять?",
             "notfound": "Не найдено",
-            "update_enabled_False": " (!не обн.) "
+            "update_enabled_False": " (!не обн.) ",
+            "status_label": "Всего замен",
+            "status_label_ToolTip": "Последняя строка будет сохранена",
+            "Search_previous_repl": "Поиск предыдущей замены",
+            "Search_next_repl": "Поиск следующей замены",
+            "Restart_Anki": "🔄 Перезапустить Anki",
+            "Save_the_current": "Сохранить текущий выбор активных дополнений в профиль, номер которого вы нажмете после этой кнопки",
+            "Profile_of_allowed": "Профиль разрешенных дополнений (жирный шрифт - загружен в anki)"
         },
         "ar": {
+            "AutoTEST_NEW": "AutoTEST_NEW",
             "Auto_update": "التحديث التلقائي",
             "Created": "تم الإنشاء",
             "Find": "🔍 البحث عن جزء من النص",
             "FindF3": "🔍⬇️ البحث التالي",
             "FindF3_tooltip": "إعادة البحث عن الجزء المحدد",
+            "FindShiftF3": "🔍⬆️ البحث السابق",
             "Find_tooltip": "أدخل جزء النص",
             "Hint": "✍️ تلميح",
             "Hint_tooltip": "أدخل معلومات مختصرة تفهمها \n(أو التنسيق: #before#after أو الأوامر: -# (حذف كل شيء قبل) -## (حذف كل شيء بعد)\n -substring_to_delete +substring_to_add)",
@@ -97,7 +115,14 @@
             "auto_updateYes_tooltip": "جميع الإضافات المحددة سيتم تحديثها تلقائيًا",
             "download_addons": "انتبه! هناك إضافة موجودة بالفعل في القائمة. هل يجب استبدالها؟",
             "notfound": "غير موجود",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "إجمالي الاستبدالات",
+            "status_label_ToolTip": "سيتم حفظ السطر الأخير",
+            "Search_previous_repl": "البحث عن الاستبدال السابق",
+            "Search_next_repl": "جاري البحث عن الاستبدال التالي",
+            "Restart_Anki": "🔄 أعد تشغيل Anki",            
+            "حفظ الحالي": "احفظ مجموعة الإضافات النشطة الحالية في الملف الشخصي الذي تنقر على رقمه بعد هذا الزر",
+            "ملف تعريف المسموح به": "ملف تعريف الإضافات المسموح بها (غامق - مُحمّل في Anki)"            
         },
         "de": {
             "Auto_update": "Automatische Aktualisierung",
@@ -105,6 +130,7 @@
             "Find": "🔍 Unterzeichen finden",
             "FindF3": "🔍⬇️ Nächste suchen",
             "FindF3_tooltip": "Suche nach Unterzeichen wiederholen",
+            "FindShiftF3": "🔍⬆️ Vorherige Suche",
             "Find_tooltip": "Geben Sie ein Unterzeichen ein",
             "Hint": "✍️ Hinweis",
             "Hint_tooltip": "Geben Sie kurze Informationen ein, die Sie verstehen \n(oder Format: #vorher#nachher oder Befehle: -# (alles davor löschen) -## (alles danach löschen)\n -zu_löschender_Teilstring +hinzufügender_Teilstring)",
@@ -128,7 +154,14 @@
             "auto_updateYes_tooltip": "Alle ausgewählten Add-ons werden automatisch aktualisiert",
             "download_addons": "Achtung! Ein Add-on ist bereits in der Liste. Soll es ersetzt werden?",
             "notfound": "Nicht gefunden",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "Gesamtanzahl der Ersetzungen",
+            "status_label_ToolTip": "Die letzte Zeile wird gespeichert",
+            "Search_previous_repl": "Suche nach vorherigem Ersatz",
+            "Search_next_repl": "Suche nach dem nächsten Ersatz",
+            "Restart_Anki": "🔄 Anki neu starten",
+            "Save_the_current": "Speichert die aktuelle Auswahl aktiver Add-ons in dem Profil, dessen Nummer Sie nach dieser Schaltfläche anklicken",
+            "Profile_of_allowed": "Profil der erlaubten Add-ons (fett gedruckt – in Anki geladen)"
         },        
         "es": {
             "Auto_update": "Actualización automática",
@@ -136,6 +169,7 @@
             "Find": "🔍 Buscar una subcadena",
             "FindF3": "🔍⬇️ Buscar siguiente",
             "FindF3_tooltip": "Repetir búsqueda de subcadena",
+            "FindShiftF3": "🔍⬆️ Buscar anterior",
             "Find_tooltip": "Ingrese una subcadena",
             "Hint": "✍️ Pista",
             "Hint_tooltip": "Ingrese información breve que comprenda\n(o formato: #antes#después o comandos: -# (borrar todo lo anterior) -## (borrar todo lo posterior)\n -substring_to_delete +substring_to_add)",
@@ -159,7 +193,14 @@
             "auto_updateYes_tooltip": "Todos los complementos seleccionados se actualizarán automáticamente",
             "download_addons": "¡Atención! Ya hay uno de los complementos en la lista. ¿Deberíamos reemplazarlo?",
             "notfound": "No encontrado",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "Total de reemplazos",
+            "status_label_ToolTip": "Se guardará la última línea",
+            "Search_previous_repl": "Buscar el reemplazo anterior",
+            "Search_next_repl": "Buscando el siguiente reemplazo",
+            "Restart_Anki": "🔄 Reiniciar Anki",
+            "Save_the_current": "Guardar la selección actual de complementos activos en el perfil cuyo número se selecciona después de este botón",
+            "Profile_of_allowed": "Perfil de complementos permitidos (en negrita - cargados en Anki)"
         },
         "fr": {
             "Auto_update": "Mise à jour auto",
@@ -167,6 +208,7 @@
             "Find": "🔍 Trouver une sous-chaîne",
             "FindF3": "🔍⬇️ Recherche suivante",
             "FindF3_tooltip": "Répéter la recherche de la sous-chaîne",
+            "FindShiftF3": "🔍⬆️ Rechercher précédent",
             "Find_tooltip": "Entrez une sous-chaîne",
             "Hint": "✍️ Indice",
             "Hint_tooltip": "Ingrese información breve que comprenda\n(o formato: #antes#después o comandos: -# (borrar todo lo anterior) -## (borrar todo lo posterior)\n -substring_to_delete +substring_to_add)",
@@ -190,7 +232,14 @@
             "auto_updateYes_tooltip": "Tous les modules complémentaires sélectionnés seront mis à jour automatiquement",
             "download_addons": "Attention ! Un des modules complémentaires est déjà dans la liste. Faut-il le remplacer ?",
             "notfound": "Introuvable",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "Nombre total de remplacements",
+            "status_label_ToolTip": "La dernière ligne sera enregistrée",
+            "Search_previous_repl": "Recherche du remplacement précédent",
+            "Search_next_repl": "Recherche du remplacement suivant",
+            "Restart_Anki": "🔄 Redémarrer Anki",
+            "Save_the_current": "Enregistrer la sélection actuelle de modules complémentaires actifs dans le profil dont vous cliquez sur le numéro après avoir cliqué sur ce bouton",
+            "Profile_of_allowed": "Profil des modules complémentaires autorisés (en gras - chargés dans Anki)"
         },
         "hi": {
             "Auto_update": "स्वचालित अद्यतन",
@@ -198,6 +247,7 @@
             "Find": "🔍 उपस्ट्रिंग खोजें",
             "FindF3": "🔍⬇️ अगला खोजें",
             "FindF3_tooltip": "उपस्ट्रिंग के लिए खोज दोहराएं",
+            "FindShiftF3": "🔍⬆️ पिछला खोजें",
             "Find_tooltip": "एक उपस्ट्रिंग दर्ज करें",
             "Hint": "✍️ संकेत",
             "Hint_tooltip": "संक्षिप्त जानकारी दर्ज करें जिसे आप समझते हैं \n(या प्रारूप: #before#after या आदेश: -# (पहले सब कुछ हटाएँ) -## (बाद में सब कुछ हटाएँ)\n -substring_to_delete +substring_to_add)",
@@ -221,7 +271,14 @@
             "auto_updateYes_tooltip": "सभी चयनित ऐड-ऑन स्वचालित रूप से अद्यतन होंगे",
             "download_addons": "ध्यान दें! सूची में पहले से ही एक ऐड-ऑन है। क्या हमें इसे बदलना चाहिए?",
             "notfound": "नहीं मिला",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "कुल प्रतिस्थापन",
+            "status_label_ToolTip": "अंतिम पंक्ति सहेजी जाएगी",
+            "Search_previous_repl": "पिछले प्रतिस्थापन के लिए खोजें",
+            "Search_next_repl": "अगले प्रतिस्थापन के लिए खोज कर रहा हूँ",
+            "Restart_Anki": "🔄 Anki को पुनः आरंभ करें",
+            "Save_the_current": "सक्रिय ऐड-ऑन के वर्तमान चयन को उस प्रोफ़ाइल में सहेजें जिसका नंबर आप इस बटन के बाद क्लिक करते हैं",
+            "Profile_of_allowed": "अनुमत ऐड-ऑन की प्रोफ़ाइल (बोल्ड - anki में लोड की गई)"
         },
         "it": {
             "Auto_update": "Aggiornamento automatico",
@@ -229,6 +286,7 @@
             "Find": "🔍 Trova una sottostringa",
             "FindF3": "🔍⬇️ Cerca successivo",
             "FindF3_tooltip": "Ripeti la ricerca per la sottostringa",
+            "FindShiftF3": "🔍⬆️ Cerca precedente",
             "Find_tooltip": "Inserisci una sottostringa",
             "Hint": "✍️ Suggerimento",
             "Hint_tooltip": "Inserisci brevi informazioni che comprendi \n(o formato: #prima#dopo oppure comandi: -# (elimina tutto prima) -## (elimina tutto dopo)\n -sottostringa_da_eliminare +sottostringa_da_aggiungere)",
@@ -252,7 +310,14 @@
             "auto_updateYes_tooltip": "Tutti gli add-on selezionati verranno aggiornati automaticamente",
             "download_addons": "Attenzione! Esiste già un add-on nella lista. Vuoi sostituirlo?",
             "notfound": "Non trovato",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "Sostituzioni totali",
+            "status_label_ToolTip": "L'ultima riga verrà salvata",
+            "Search_previous_repl": "Cerca la sostituzione precedente",
+            "Search_next_repl": "Cerca la sostituzione successiva",
+            "Restart_Anki": "🔄 Riavvia Anki",
+            "Save_the_current": "Salva la selezione corrente di componenti aggiuntivi attivi nel profilo di cui clicchi il numero dopo questo pulsante",
+            "Profile_of_allowed": "Profilo dei componenti aggiuntivi consentiti (grassetto - caricati in Anki)"
         },
         "ja": {
             "Auto_update": "自動更新",
@@ -260,6 +325,7 @@
             "Find": "🔍 サブストリングを検索",
             "FindF3": "🔍⬇️ 次を検索",
             "FindF3_tooltip": "サブストリングの検索を繰り返す",
+            "FindShiftF3": "🔍⬆️ 前を検索",
             "Find_tooltip": "サブストリングを入力してください",
             "Hint": "✍️ ヒント",
             "Hint_tooltip": "理解できる簡単な情報を入力してください \n(または形式: #before#after またはコマンド: -# (前のすべてを削除) -## (後のすべてを削除)\n -substring_to_delete +substring_to_add)",
@@ -283,7 +349,14 @@
             "auto_updateYes_tooltip": "選択したアドオンは自動的に更新されます",
             "download_addons": "注意！リストに既にアドオンがあります。置き換えますか？",
             "notfound": "見つかりません",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "合計置換数",
+            "status_label_ToolTip": "最後の行が保存されます",
+            "Search_previous_repl": "前の置換を検索",
+            "Search_next_repl": "次の置換を検索しています",
+            "Restart_Anki": "🔄 Anki を再起動",
+            "Save_the_current": "現在選択されているアクティブなアドオンを、このボタンの後にクリックした番号のプロファイルに保存します",
+            "Profile_of_allowed": "許可され​​たアドオンのプロファイル（太字 - Anki に読み込まれています）"        
         },
         "ko": {
             "Auto_update": "자동 업데이트",
@@ -291,6 +364,7 @@
             "Find": "🔍 부분 문자열 찾기",
             "FindF3": "🔍⬇️ 다음 검색",
             "FindF3_tooltip": "부분 문자열에 대해 검색을 반복",
+            "FindShiftF3": "🔍⬆️ 이전 검색",
             "Find_tooltip": "부분 문자열을 입력하세요",
             "Hint": "✍️ 힌트",
             "Hint_tooltip": "당신이 이해하는 간략한 정보를 입력하세요 \n(또는 형식: #before#after 또는 명령어: -#(앞의 모든 것 삭제) -##(뒤의 모든 것 삭제)\n -삭제할 하위 문자열 +추가할 하위 문자열)",
@@ -314,7 +388,14 @@
             "auto_updateYes_tooltip": "선택한 애드온은 자동으로 업데이트됩니다",
             "download_addons": "주의! 목록에 이미 애드온이 있습니다. 교체할까요?",
             "notfound": "찾을 수 없음",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "전체 교체",
+            "status_label_ToolTip": "마지막 줄이 저장됩니다",
+            "Search_previous_repl": "이전 대체 항목 검색",
+            "Search_next_repl": "다음 대체 항목 검색 중",
+            "Restart_Anki": "🔄 Anki 재시작",
+            "Save_the_current": "현재 활성화된 애드온을 이 버튼 뒤에 클릭한 번호의 프로필에 저장합니다.",
+            "Profile_of_allowed": "허용된 애드온 프로필(굵게 표시 - Anki에 로드됨)"
         },
         "pt": {
             "Auto_update": "Atualização automática",
@@ -322,6 +403,7 @@
             "Find": "🔍 Encontrar substring",
             "FindF3": "🔍⬇️ Buscar próximo",
             "FindF3_tooltip": "Repetir a busca pela substring",
+            "FindShiftF3": "🔍⬆️ Pesquisar Anterior",
             "Find_tooltip": "Digite uma substring",
             "Hint": "✍️ Dica",
             "Hint_tooltip": "Introduza informação breve que entenda \n(ou formato: #antes#depois ou comandos: -# (apagar tudo antes) -## (apagar tudo depois)\n -substring_a_apagar +substring_a_adicionar)",
@@ -345,7 +427,14 @@
             "auto_updateYes_tooltip": "Todos os complementos selecionados serão atualizados automaticamente",
             "download_addons": "Atenção! Já existe um complemento na lista. Deve substituí-lo?",
             "notfound": "Não encontrado",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "Total de substituições",
+            "status_label_ToolTip": "A última linha será guardada",
+            "Search_previous_repl": "Pesquisar por substituição anterior",
+            "Search_next_repl": "Procura a próxima substituição",
+            "Restart_Anki": "🔄 Reiniciar Anki",
+            "Save_the_current": "Guarde a seleção atual de add-ons ativos no perfil cujo número clica após este botão",
+            "Profile_of_allowed": "Perfil dos add-ons permitidos (em negrito - carregado no Anki)"
         },
         "pt-BR": {
             "Auto_update": "Atualização automática",
@@ -353,6 +442,7 @@
             "Find": "🔍 Encontre uma substring",
             "FindF3": "🔍⬇️ Pesquisar próximo",
             "FindF3_tooltip": "Repetir pesquisa por substring",
+            "FindShiftF3": "🔍⬆️ Pesquisar Anterior",
             "Find_tooltip": "Insira a substring",
             "Hint": "✍️ Dica",
             "Hint_tooltip": "Digite informações breves que você entenda \n(ou formato: #antes#depois ou comandos: -# (apagar tudo antes) -## (apagar tudo depois)\n -substring_a_apagar +substring_a_adicionar)",
@@ -376,7 +466,14 @@
             "auto_updateYes_tooltip": "Todos os complementos selecionados serão atualizados automaticamente",
             "download_addons": "Atenção! Já existe um dos add-ons na lista. Devemos substituí-lo?",
             "notfound": "Não encontrado",
-            "update_enabled_False": " (!auto) "
+            "update_enabled_False": " (!auto) ",
+            "status_label": "Total de substituições",
+            "status_label_ToolTip": "A última linha será salva",
+            "Search_previous_repl": "Buscar substituição anterior",
+            "Search_next_repl": "Buscar a próxima substituição",
+            "Restart_Anki": "🔄 Reiniciar o Anki",
+            "Save_the_current": "Salvar a seleção atual de complementos ativos no perfil cujo número você clicar após este botão",
+            "Profile_of_allowed": "Perfil de complementos permitidos (em negrito - carregado no Anki)"
         },        
         "zh_CN": {
             "Auto_update": "自动更新",
@@ -384,6 +481,7 @@
             "Find": "🔍 查找子字符串",
             "FindF3": "🔍⬇️ 搜索下一个",
             "FindF3_tooltip": "重复搜索子字符串",
+            "FindShiftF3": "🔍⬆️ 搜索上一个",
             "Find_tooltip": "输入子字符串",
             "Hint": "✍️ 提示",            
             "Hint_tooltip": "输入您理解的简要信息\n（或格式：#before#after 或命令：-#（删除之前的所有内容）-##（删除之后的所有内容）\n -substring_to_delete +substring_to_add）",
@@ -407,7 +505,14 @@
             "auto_updateYes_tooltip": "所有选定的插件将自动更新",
             "download_addons": "注意！列表中已有一个插件。要替换它吗？",
             "notfound": "未找到",
-            "update_enabled_False": "（！自动）"
+            "update_enabled_False": "（！自动）",
+            "status_label": "总替换数",
+            "status_label_ToolTip": "最后一行将被保存",
+            "Search_previous_repl": "搜索上一个替换",
+            "Search_next_repl": "搜索下一个替换",
+            "Restart_Anki": "🔄 重启 Anki",
+            "Save_the_current": "将当前选择的活跃插件保存到您点击此按钮后编号的配置文件中",
+            "Profile_of_allowed": "允许的插件配置文件（粗体 - 已加载到 Anki 中）"
         }
     }
 }
