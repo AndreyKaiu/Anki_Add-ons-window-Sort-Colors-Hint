@@ -2,7 +2,7 @@
 # Add-on for the Anki program. For the window with add-ons, it implements the ability 
 # to sort and color the list, it is possible to set a hint for a specific add-on.
 # https://github.com/AndreyKaiu/Anki_Add-ons-window-Sort-Colors-Hint
-# Version 1.3, date: 2025-04-26
+# Version 1.4, date: 2026-02-22
 import subprocess
 import sys
 import traceback
@@ -170,12 +170,75 @@ try:
 except Exception as e: logError(e)
 
     
+
+
+# def restart_anki():
+#     anki_exe = sys.executable
+#     # Только имя исполняемого файла, без аргументов, иначе Anki подумает что ему передали .apkg
+#     subprocess.Popen([anki_exe])
+#     # Закрываем текущую Anki после запуска новой
+#     QTimer.singleShot(100, mw.close)    
+
+
+
 def restart_anki():
-    anki_exe = sys.executable
-    # Только имя исполняемого файла, без аргументов, иначе Anki подумает что ему передали .apkg
-    subprocess.Popen([anki_exe])
-    # Закрываем текущую Anki после запуска новой
-    QTimer.singleShot(100, mw.close)    
+    """Перезапускает Anki с правильным исполняемым файлом"""
+    
+    # Способ 1: Использовать переменную окружения ANKI_LAUNCHER (новые версии)
+    anki_exe = os.getenv("ANKI_LAUNCHER")
+    
+    # Способ 2: Если не сработало, пробуем через aqt.package
+    if not anki_exe:
+        try:
+            from aqt.package import launcher_executable
+            anki_exe = launcher_executable()
+        except ImportError:
+            pass
+    
+    # Способ 3: Ручной поиск в зависимости от платформы
+    if not anki_exe:
+        import platform
+        system = platform.system()
+        
+        if system == "Windows":
+            # Проверяем стандартные пути установки
+            possible_paths = [
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Anki', 'anki.exe'),
+                os.path.join(os.environ.get('PROGRAMFILES', ''), 'Anki', 'anki.exe'),
+                os.path.join(os.environ.get('PROGRAMFILES(X86)', ''), 'Anki', 'anki.exe'),
+            ]
+            for path in possible_paths:
+                if os.path.exists(path):
+                    anki_exe = path
+                    break
+                    
+        elif system == "Darwin":  # macOS
+            anki_exe = '/Applications/Anki.app'
+            
+        else:  # Linux
+            anki_exe = 'anki'  # надеемся на PATH
+    
+    # Если всё ещё не нашли, используем shutil.which как запасной вариант
+    if not anki_exe:
+        import shutil
+        anki_exe = shutil.which("anki")
+    
+    # Если ничего не помогло, используем старый способ (может не работать)
+    if not anki_exe:
+        anki_exe = sys.executable
+    
+    # Запускаем новую Anki
+    if anki_exe:
+        if sys.platform == "darwin" and anki_exe.endswith(".app"):
+            # На macOS нужно открывать .app специальным образом
+            subprocess.Popen(["open", anki_exe])
+        else:
+            subprocess.Popen([anki_exe])
+    
+    # Закрываем текущую Anki с задержкой
+    QTimer.singleShot(500, mw.close)  # Увеличил задержку до 500мс
+
+
 # Добавляем в меню перезапуск
 action = QAction(localizationF("Restart_Anki", "🔄 Restart Anki"), mw)
 action.setShortcut("Alt+Shift+F4")
