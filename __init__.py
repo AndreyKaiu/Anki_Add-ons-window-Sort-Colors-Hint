@@ -670,12 +670,18 @@ class JsonHighlighter(QSyntaxHighlighter):
 
             fmt = QTextCharFormat()
             fmt.setBackground(qcolor)
-
+            
             # Автоматически выбираем белый/чёрный текст по яркости
             if qcolor.lightness() < 128:
-                fmt.setForeground(Qt.GlobalColor.white)
+                if qcolor.alpha() < 64:
+                    fmt.setForeground(QColor("gray"))
+                else:
+                    fmt.setForeground(Qt.GlobalColor.white)
             else:
-                fmt.setForeground(Qt.GlobalColor.black)
+                if qcolor.alpha() < 64:
+                    fmt.setForeground(QColor("gray"))
+                else:
+                    fmt.setForeground(Qt.GlobalColor.black)   
 
             # Подсветка только содержимого (без кавычек)
             self.setFormat(match.capturedStart(1), match.capturedLength(1), fmt)
