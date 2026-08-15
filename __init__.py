@@ -2,7 +2,7 @@
 # Add-on for the Anki program. For the window with add-ons, it implements the ability 
 # to sort and color the list, it is possible to set a hint for a specific add-on.
 # https://github.com/AndreyKaiu/Anki_Add-ons-window-Sort-Colors-Hint
-# Version 1.4, date: 2026-02-22
+# Version 1.5, date: 2026-08-15
 import subprocess
 import sys
 import traceback
@@ -113,7 +113,19 @@ else:
     QTextCursor_PreviousRow = QTextCursor.PreviousRow
 
 
-    
+
+def QColorRRGGBBAA(s): 
+    """Converts #RRGGBBAA to QColor (interpreted as RRGGBBAA, not AARRGGBB)"""
+    if s.startswith('#') and len(s) == 9:  # # + 8 символов
+        hex_str = s[1:] 
+        # If all 8 characters are correct, we consider it to be RRGGBBAA
+        # and rearrange it as AARRGGBB for QColor
+        rr, gg, bb, aa = hex_str[0:2], hex_str[2:4], hex_str[4:6], hex_str[6:8]
+        # Collect like #AARRGGBB
+        new_s = '#' + aa + rr + gg + bb
+        return QColor(new_s)
+    else:
+        return QColor(s) 
 
 def logError(e):
     # print("logError: ", e)
@@ -184,6 +196,15 @@ except Exception as e: logError(e)
 def restart_anki():
     """Перезапускает Anki с правильным исполняемым файлом"""
     
+    # Save and disable sync settings
+    
+    if configF("GLOBAL_SETTINGS","disable_auto_sync_when_restarting", True):                        
+            config["GLOBAL_SETTINGS"]["user_auto_Sync"] = mw.pm.profile["autoSync"]            
+            mw.pm.profile["autoSync"] = False
+            mw.addonManager.writeConfig(__name__, config) # записываем конфиг с изменениями         
+            autosync =  mw.pm.auto_syncing_enabled()
+            print(f"restart sync {autosync}")
+
     # Способ 1: Использовать переменную окружения ANKI_LAUNCHER (новые версии)
     anki_exe = os.getenv("ANKI_LAUNCHER")
     
@@ -236,7 +257,7 @@ def restart_anki():
             subprocess.Popen([anki_exe])
     
     # Закрываем текущую Anki с задержкой
-    QTimer.singleShot(500, mw.close)  # Увеличил задержку до 500мс
+    QTimer.singleShot(700, mw.close)  # Увеличил задержку до 700мс
 
 
 # Добавляем в меню перезапуск
@@ -303,6 +324,24 @@ def create_and_load_profiles():
 
 # создаем и загружаем профили
 create_and_load_profiles()
+
+
+def set_autoSync(*args,**kwargs):
+    config = mw.addonManager.getConfig(__name__)
+    if configF("GLOBAL_SETTINGS","disable_auto_sync_when_restarting", True):
+        try: # Restore sync settings           
+            if not configF("GLOBAL_SETTINGS","user_auto_Sync", None) == None:
+                # Load saved settings
+                mw.pm.profile["autoSync"] = config["GLOBAL_SETTINGS"]["user_auto_Sync"]
+            # Delete settings
+            config["GLOBAL_SETTINGS"]["user_auto_Sync"] = None
+            mw.addonManager.writeConfig(__name__, config)
+        except Exception as e:            
+            print("user_auto_Sync error",e)
+            raise e
+       
+
+gui_hooks.main_window_did_init.append(set_autoSync)
 
 
 
@@ -448,7 +487,7 @@ class LineNumberArea(QWidget):
                     font.setBold(True)
                     painter.setFont(font)
                 else:                    
-                    color = QColor("##FFFFFF") if theme_night else QColor("#000000")
+                    color = QColor("#FFFFFF") if theme_night else QColor("#000000")
                     painter.setPen( color )
                     font = painter.font()
                     font.setBold(False)
@@ -541,46 +580,46 @@ class JsonHighlighter(QSyntaxHighlighter):
         theme = "dark" if theme_night else "light"
         
         # Числа
-        number_format = self.format(QColor(colorsHL[theme]["number"]))
+        number_format = self.format(QColorRRGGBBAA(colorsHL[theme]["number"]))
         self.rules.append((QRegularExpression(r'(?<=[^#])\b(\d+(\.\d+)?)\b'), number_format))
 
         # Булевы и null
-        const_format = self.format(QColor(colorsHL[theme]["const"]), italic=True)
+        const_format = self.format(QColorRRGGBBAA(colorsHL[theme]["const"]), italic=True)
         self.rules.append((QRegularExpression(r'\b(true|false|null)\b'), const_format))
 
         # Скобки и запятые
-        brace_format = self.format(QColor(colorsHL[theme]["brace"]))
+        brace_format = self.format(QColorRRGGBBAA(colorsHL[theme]["brace"]))
         for symbol in r'()\,.:':
             self.rules.append((QRegularExpression(rf'(\{symbol})'), brace_format))
 
-        brace1_format = self.format(QColor(colorsHL[theme]["brace1"]))
+        brace1_format = self.format(QColorRRGGBBAA(colorsHL[theme]["brace1"]))
         for symbol in r'.;':
             self.rules.append((QRegularExpression(rf'(\{symbol})'), brace1_format))
 
-        brace2_format = self.format(QColor(colorsHL[theme]["brace2"]), bold=True)    
+        brace2_format = self.format(QColorRRGGBBAA(colorsHL[theme]["brace2"]), bold=True)    
         for symbol in r'{}':
             self.rules.append((QRegularExpression(rf'(\{symbol})'), brace2_format))
-        brace3_format = self.format(QColor(colorsHL[theme]["brace3"]), bold=True)    
+        brace3_format = self.format(QColorRRGGBBAA(colorsHL[theme]["brace3"]), bold=True)    
         for symbol in r'[]':
             self.rules.append((QRegularExpression(rf'(\{symbol})'), brace3_format))
-        brace4_format = self.format(QColor(colorsHL[theme]["brace4"]), bold=True)    
+        brace4_format = self.format(QColorRRGGBBAA(colorsHL[theme]["brace4"]), bold=True)    
         for symbol in r'()':
             self.rules.append((QRegularExpression(rf'(\{symbol})'), brace4_format))
 
         # Строки: "значение"
-        string_format = self.format(QColor(colorsHL[theme]["string"]))
+        string_format = self.format(QColorRRGGBBAA(colorsHL[theme]["string"]))
         self.rules.append((QRegularExpression(r'("([^"\\]|\\.)*")'), string_format))
 
         # Ключи: "ключ"
-        key_format = self.format(QColor(colorsHL[theme]["key"]), bold=True)
+        key_format = self.format(QColorRRGGBBAA(colorsHL[theme]["key"]), bold=True)
         self.rules.append((QRegularExpression(r'("([^"\\]|\\.)*")\s*:'), key_format))      
 
         # Ключи: {
-        key1_format = self.format(QColor(colorsHL[theme]["key1"]), bold=True)
+        key1_format = self.format(QColorRRGGBBAA(colorsHL[theme]["key1"]), bold=True)
         self.rules.append((QRegularExpression(r'("([^"\\]|\\.)*")\s*:\s*\{'), key1_format))       
 
         # Ключи ?: "ключ"
-        key2_format = self.format(QColor(colorsHL[theme]["key2"]))
+        key2_format = self.format(QColorRRGGBBAA(colorsHL[theme]["key2"]))
         self.rules.append((QRegularExpression(r'("([^"\\]|\\.)* \?"\s*:)'), key2_format))  
         self.rules.append((QRegularExpression(r'( \?"\s*:\s*"([^"\\]|\\.)*")'), key2_format))  
 
@@ -636,16 +675,18 @@ class JsonHighlighter(QSyntaxHighlighter):
         
     def format(self, color_hex, bold=False, italic=False, color_back=None):
         fmt = QTextCharFormat()
-        fmt.setForeground(QColor(color_hex))
+        fmt.setForeground(color_hex)
         if not color_back == None:
-            fmt.setBackground(QColor(color_back))
+            fmt.setBackground(color_back)
         if bold:
             fmt.setFontWeight(QFont.Weight.Bold)
         if italic:
             fmt.setFontItalic(True)
         return fmt
 
-    def highlightBlock(self, text):                  
+    
+                
+    def highlightBlock(self, text):        
 
         for pattern, fmt in self.rules:
             match_iter = pattern.globalMatch(text)
@@ -657,14 +698,15 @@ class JsonHighlighter(QSyntaxHighlighter):
                     length = match.capturedLength(1)
                     self.setFormat(start, length, fmt)
 
+        
         # Подсветка строк с цветами
         color_regex = QRegularExpression(r'"([#a-zA-Z0-9]{3,20})"')
         color_iter = color_regex.globalMatch(text)
         while color_iter.hasNext():
             match = color_iter.next()
             color_code = match.captured(1)
-            qcolor = QColor(color_code)
-
+            qcolor = QColorRRGGBBAA(color_code)
+   
             if not qcolor.isValid():
                 continue
 

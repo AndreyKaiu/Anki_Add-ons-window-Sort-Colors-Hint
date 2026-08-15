@@ -1,12 +1,10 @@
 {
     "name": "Add-ons window - Sort Colors Hint",
-    "mod": 1771785559,
+    "mod": 1786798348,
     "min_point_version": 1,
-    "max_point_version": 250902,
+    "max_point_version": 260801,
     "branch_index": 0,
-    "disabled": false,
-    "hint": "",
-    "mark_color": "#ff007f",
+    "disabled": false,    
     "conflicts": [],
     "update_enabled": true
 }
