@@ -43,7 +43,8 @@
             "Search_next_repl": "Searching for the next replacement",
             "Restart_Anki": "🔄 Restart Anki",
             "Save_the_current": "Save the current selection of active add-ons to the profile whose number you click after this button",
-            "Profile_of_allowed": "Profile of allowed add-ons (bold - loaded in anki)"
+            "Profile_of_allowed": "Profile of allowed add-ons (bold - loaded in anki)",
+			"Placeholder_filter": "Enter text for the filter"
         },
         "ru": {            
             "Auto_update": "Автообновление",
@@ -82,7 +83,8 @@
             "Search_next_repl": "Поиск следующей замены",
             "Restart_Anki": "🔄 Перезапустить Anki",
             "Save_the_current": "Сохранить текущий выбор активных дополнений в профиль, номер которого вы нажмете после этой кнопки",
-            "Profile_of_allowed": "Профиль разрешенных дополнений (жирный шрифт - загружен в anki)"
+            "Profile_of_allowed": "Профиль разрешенных дополнений (жирный шрифт - загружен в anki)",
+			"Placeholder_filter": "Введите текст для фильтра"
         },
         "ar": {
             "AutoTEST_NEW": "AutoTEST_NEW",
@@ -122,7 +124,8 @@
             "Search_next_repl": "جاري البحث عن الاستبدال التالي",
             "Restart_Anki": "🔄 أعد تشغيل Anki",            
             "حفظ الحالي": "احفظ مجموعة الإضافات النشطة الحالية في الملف الشخصي الذي تنقر على رقمه بعد هذا الزر",
-            "ملف تعريف المسموح به": "ملف تعريف الإضافات المسموح بها (غامق - مُحمّل في Anki)"            
+            "ملف تعريف المسموح به": "ملف تعريف الإضافات المسموح بها (غامق - مُحمّل في Anki)",
+			"Placeholder_filter": "أدخل نصًا للفلتر"            
         },
         "de": {
             "Auto_update": "Automatische Aktualisierung",
@@ -161,7 +164,8 @@
             "Search_next_repl": "Suche nach dem nächsten Ersatz",
             "Restart_Anki": "🔄 Anki neu starten",
             "Save_the_current": "Speichert die aktuelle Auswahl aktiver Add-ons in dem Profil, dessen Nummer Sie nach dieser Schaltfläche anklicken",
-            "Profile_of_allowed": "Profil der erlaubten Add-ons (fett gedruckt – in Anki geladen)"
+            "Profile_of_allowed": "Profil der erlaubten Add-ons (fett gedruckt – in Anki geladen)",
+			"Placeholder_filter": "Geben Sie Text für den Filter ein"
         },        
         "es": {
             "Auto_update": "Actualización automática",
@@ -200,7 +204,8 @@
             "Search_next_repl": "Buscando el siguiente reemplazo",
             "Restart_Anki": "🔄 Reiniciar Anki",
             "Save_the_current": "Guardar la selección actual de complementos activos en el perfil cuyo número se selecciona después de este botón",
-            "Profile_of_allowed": "Perfil de complementos permitidos (en negrita - cargados en Anki)"
+            "Profile_of_allowed": "Perfil de complementos permitidos (en negrita - cargados en Anki)",
+			"Placeholder_filter": "Introduzca el texto para el filtro"
         },
         "fr": {
             "Auto_update": "Mise à jour auto",
@@ -239,7 +244,8 @@
             "Search_next_repl": "Recherche du remplacement suivant",
             "Restart_Anki": "🔄 Redémarrer Anki",
             "Save_the_current": "Enregistrer la sélection actuelle de modules complémentaires actifs dans le profil dont vous cliquez sur le numéro après avoir cliqué sur ce bouton",
-            "Profile_of_allowed": "Profil des modules complémentaires autorisés (en gras - chargés dans Anki)"
+            "Profile_of_allowed": "Profil des modules complémentaires autorisés (en gras - chargés dans Anki)",
+			"Placeholder_filter": "Saisissez le texte pour le filtre"
         },
         "hi": {
             "Auto_update": "स्वचालित अद्यतन",
@@ -278,7 +284,8 @@
             "Search_next_repl": "अगले प्रतिस्थापन के लिए खोज कर रहा हूँ",
             "Restart_Anki": "🔄 Anki को पुनः आरंभ करें",
             "Save_the_current": "सक्रिय ऐड-ऑन के वर्तमान चयन को उस प्रोफ़ाइल में सहेजें जिसका नंबर आप इस बटन के बाद क्लिक करते हैं",
-            "Profile_of_allowed": "अनुमत ऐड-ऑन की प्रोफ़ाइल (बोल्ड - anki में लोड की गई)"
+            "Profile_of_allowed": "अनुमत ऐड-ऑन की प्रोफ़ाइल (बोल्ड - anki में लोड की गई)",
+			"Placeholder_filter": "फ़िल्टर के लिए टेक्स्ट डालें"
         },
         "it": {
             "Auto_update": "Aggiornamento automatico",
@@ -317,7 +324,8 @@
             "Search_next_repl": "Cerca la sostituzione successiva",
             "Restart_Anki": "🔄 Riavvia Anki",
             "Save_the_current": "Salva la selezione corrente di componenti aggiuntivi attivi nel profilo di cui clicchi il numero dopo questo pulsante",
-            "Profile_of_allowed": "Profilo dei componenti aggiuntivi consentiti (grassetto - caricati in Anki)"
+            "Profile_of_allowed": "Profilo dei componenti aggiuntivi consentiti (grassetto - caricati in Anki)",
+			"Placeholder_filter": "Inserisci il testo per il filtro"
         },
         "ja": {
             "Auto_update": "自動更新",
@@ -356,7 +364,8 @@
             "Search_next_repl": "次の置換を検索しています",
             "Restart_Anki": "🔄 Anki を再起動",
             "Save_the_current": "現在選択されているアクティブなアドオンを、このボタンの後にクリックした番号のプロファイルに保存します",
-            "Profile_of_allowed": "許可され​​たアドオンのプロファイル（太字 - Anki に読み込まれています）"        
+            "Profile_of_allowed": "許可され​​たアドオンのプロファイル（太字 - Anki に読み込まれています）",
+			"Placeholder_filter": "フィルターのテキストを入力してください"        
         },
         "ko": {
             "Auto_update": "자동 업데이트",
@@ -395,7 +404,8 @@
             "Search_next_repl": "다음 대체 항목 검색 중",
             "Restart_Anki": "🔄 Anki 재시작",
             "Save_the_current": "현재 활성화된 애드온을 이 버튼 뒤에 클릭한 번호의 프로필에 저장합니다.",
-            "Profile_of_allowed": "허용된 애드온 프로필(굵게 표시 - Anki에 로드됨)"
+            "Profile_of_allowed": "허용된 애드온 프로필(굵게 표시 - Anki에 로드됨)",
+			"Placeholder_filter": "필터에 사용할 텍스트를 입력하세요"
         },
         "pt": {
             "Auto_update": "Atualização automática",
@@ -434,7 +444,8 @@
             "Search_next_repl": "Procura a próxima substituição",
             "Restart_Anki": "🔄 Reiniciar Anki",
             "Save_the_current": "Guarde a seleção atual de add-ons ativos no perfil cujo número clica após este botão",
-            "Profile_of_allowed": "Perfil dos add-ons permitidos (em negrito - carregado no Anki)"
+            "Profile_of_allowed": "Perfil dos add-ons permitidos (em negrito - carregado no Anki)",
+			"Placeholder_filter": "Introduza o texto para o filtro"
         },
         "pt-BR": {
             "Auto_update": "Atualização automática",
@@ -473,7 +484,8 @@
             "Search_next_repl": "Buscar a próxima substituição",
             "Restart_Anki": "🔄 Reiniciar o Anki",
             "Save_the_current": "Salvar a seleção atual de complementos ativos no perfil cujo número você clicar após este botão",
-            "Profile_of_allowed": "Perfil de complementos permitidos (em negrito - carregado no Anki)"
+            "Profile_of_allowed": "Perfil de complementos permitidos (em negrito - carregado no Anki)",
+			"Placeholder_filter": "Digite o texto para o filtro"
         },        
         "zh_CN": {
             "Auto_update": "自动更新",
@@ -512,7 +524,8 @@
             "Search_next_repl": "搜索下一个替换",
             "Restart_Anki": "🔄 重启 Anki",
             "Save_the_current": "将当前选择的活跃插件保存到您点击此按钮后编号的配置文件中",
-            "Profile_of_allowed": "允许的插件配置文件（粗体 - 已加载到 Anki 中）"
+            "Profile_of_allowed": "允许的插件配置文件（粗体 - 已加载到 Anki 中）",
+			"Placeholder_filter": "请输入筛选条件文本"
         }
     }
 }

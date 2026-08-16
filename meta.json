@@ -5,6 +5,6 @@
     "max_point_version": 260801,
     "branch_index": 0,
     "disabled": false,    
-    "conflicts": [],
+    "conflicts": ["add-on dialog searchfilter bar"],
     "update_enabled": true
 }

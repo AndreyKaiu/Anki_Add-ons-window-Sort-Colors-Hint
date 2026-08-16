@@ -2,7 +2,7 @@
 # Add-on for the Anki program. For the window with add-ons, it implements the ability 
 # to sort and color the list, it is possible to set a hint for a specific add-on.
 # https://github.com/AndreyKaiu/Anki_Add-ons-window-Sort-Colors-Hint
-# Version 1.5, date: 2026-08-15
+# Version 1.6, date: 2026-08-16
 import subprocess
 import sys
 import traceback
@@ -27,12 +27,14 @@ from aqt import gui_hooks
 from aqt.gui_hooks import addons_dialog_will_show
 from aqt.gui_hooks import addons_dialog_did_change_selected_addon
 from aqt.gui_hooks import dialog_manager_did_open_dialog
+from anki.hooks import wrap
 from aqt.utils import (askUser, showInfo, tooltip, showText, tr)
 from aqt.theme import theme_manager
 from datetime import datetime
 from pathlib import Path
 from types import MethodType
 import shutil
+from typing import List
 
 # ========================= PYQT_VERSION ======================================
 try:    
@@ -79,6 +81,7 @@ if pyqt_version == "PyQt6":
     QTextCursor_PreviousCell = QTextCursor.MoveOperation.PreviousCell
     QTextCursor_NextRow = QTextCursor.MoveOperation.NextRow
     QTextCursor_PreviousRow = QTextCursor.MoveOperation.PreviousRow
+    QPalette_PlaceholderText = QPalette.ColorRole.PlaceholderText
 else:    
     QTextCursor_KeepAnchor = QTextCursor.KeepAnchor
     QTextDocument_FindBackward = QTextDocument.FindBackward
@@ -111,6 +114,7 @@ else:
     QTextCursor_PreviousCell = QTextCursor.PreviousCell
     QTextCursor_NextRow = QTextCursor.NextRow
     QTextCursor_PreviousRow = QTextCursor.PreviousRow
+    QPalette_PlaceholderText = QPalette.PlaceholderText
 
 
 
@@ -182,15 +186,6 @@ try:
 except Exception as e: logError(e)
 
     
-
-
-# def restart_anki():
-#     anki_exe = sys.executable
-#     # Только имя исполняемого файла, без аргументов, иначе Anki подумает что ему передали .apkg
-#     subprocess.Popen([anki_exe])
-#     # Закрываем текущую Anki после запуска новой
-#     QTimer.singleShot(100, mw.close)    
-
 
 
 def restart_anki():
@@ -1376,26 +1371,42 @@ def custom_redrawAddons(self):
     delegate = ColorfulDelegate(addonList)
     addonList.setItemDelegate(delegate)
 
+    if hasattr(self, "filterbar"):
+        term_list = self.filterbar.text().lower().split()
+    else:
+        term_list = []
+        
+        
+    self.addons_shown = []
     i = 0
     for addon in self.addons:
         name = self.name_for_addon_list(addon)
-        item = QListWidgetItem(name, addonList)
-        if not hasattr(addon, "date_info") or addon.date_info is None:
-            addon.date_info = "" # создаем, если такого атрибута почему-то нет
-        item.setToolTip(addon.date_info)  # Устанавливаем всплывающую подсказку                   
         
-        if not hasattr(addon, "mark_color") or addon.mark_color is None:
-            addon.mark_color = "#000000" # создаем, если такого атрибута почему-то нет
+        show_this_addon = True
+        if term_list:
+            for term in term_list:
+                if term not in name.lower():
+                    show_this_addon = False
+                    
+        if show_this_addon: 
+            self.addons_shown.append(addon)
+            item = QListWidgetItem(name, addonList)
+            if not hasattr(addon, "date_info") or addon.date_info is None:
+                addon.date_info = "" # создаем, если такого атрибута почему-то нет
+            item.setToolTip(addon.date_info)  # Устанавливаем всплывающую подсказку                   
+            
+            if not hasattr(addon, "mark_color") or addon.mark_color is None:
+                addon.mark_color = "#000000" # создаем, если такого атрибута почему-то нет
 
-        if addon.mark_color not in ("#000000", "#ffffff", "#FFFFFF", ""): # раскрашиваем если не белый и не черный                    
-            item.setForeground(QColor(addon.mark_color))
-        else:
-            if self.should_grey(addon):
-                item.setForeground(Qt.GlobalColor.gray) 
-                       
+            if addon.mark_color not in ("#000000", "#ffffff", "#FFFFFF", ""): # раскрашиваем если не белый и не черный                    
+                item.setForeground(QColor(addon.mark_color))
+            else:
+                if self.should_grey(addon):
+                    item.setForeground(Qt.GlobalColor.gray) 
+                           
 
-        if addon.dir_name in selected:            
-            item.setSelected(True) 
+            if addon.dir_name in selected:            
+                item.setSelected(True) 
     
 
     #addonList.reset() # раскомментировать если надо будет сбрасывать выделение
@@ -2147,3 +2158,96 @@ def save_profile(profN):
     except Exception as e:          
         logError(e)
             
+            
+            
+
+
+def after_init(self, addonsManager):
+    # add filter bar
+    self.filterbar = QLineEdit(self)
+    msg = localizationF("Placeholder_filter", "Enter text for the filter")
+    self.filterbar.setPlaceholderText(f"{msg} [Ctrl+Shift+F]")
+    self.filterbar.setStyleSheet("""
+        QLineEdit {
+            color: red;
+            font-weight: 600;
+        }
+    """)
+    
+    palette = self.filterbar.palette()
+    palette.setColor(QPalette_PlaceholderText, QColor("#777777"))
+    self.filterbar.setPalette(palette)
+    
+    self.form.verticalLayout_2.addWidget(self.filterbar)
+    focus_filter = QShortcut(QKeySequence("Ctrl+Shift+F"), self)
+    qconnect(focus_filter.activated, self.filterbar.setFocus)
+    QTimer.singleShot(0, self.filterbar.setFocus)
+    self.filterbar.textChanged.connect(self.filterAddons)
+    self.addons_shown = []
+    
+    self.filterbar.setText( configF("GLOBAL_SETTINGS","filter", "") )
+    
+AddonsDialog.__init__ = wrap(AddonsDialog.__init__, after_init)
+
+
+def filterAddons(self, text):
+    custom_redrawAddons(self)                   
+    config["GLOBAL_SETTINGS"]["filter"] = text            
+    mw.addonManager.writeConfig(__name__, config)             
+    
+AddonsDialog.filterAddons = filterAddons    
+
+
+def selected_addons_mod(self) -> List[str]:
+    names = [x.text() for x in self.form.addonList.selectedItems()]
+    dir_names = []
+
+    if not hasattr(self, "addons") or self.addons is None:   
+        self.addons = list(self.mgr.all_addon_meta()) 
+        
+    for addon in self.addons:
+        name = self.name_for_addon_list(addon)
+        if name in names:
+            dir_names.append(addon.dir_name)
+    return dir_names
+AddonsDialog.selectedAddons = selected_addons_mod
+
+def selected_addon_meta_mod(self):
+    idxs = [x.row() for x in self.form.addonList.selectedIndexes()]
+    if len(idxs) != 1:
+        show_info(tr.addons_please_select_a_single_addon_first())
+        return None
+  
+    # start modification
+    names = [x.text() for x in self.form.addonList.selectedItems()]
+    for addon in self.addons:
+        name = self.name_for_addon_list(addon)
+        if name in names:
+            return addon
+    # end modification
+    return self.addons[idxs[0]]
+AddonsDialog.selected_addon_meta = selected_addon_meta_mod
+
+
+def _onAddonItemSelectedMod(self, row_int: int) -> None:
+    try:
+        addon = self.addons_shown[row_int]
+    except IndexError:
+        return
+    self.form.viewPage.setEnabled(addon.page() is not None)
+    self.form.config.setEnabled(
+        bool(
+            self.mgr.getConfig(addon.dir_name)
+            or self.mgr.configAction(addon.dir_name)
+        )
+    )
+    gui_hooks.addons_dialog_did_change_selected_addon(self, addon)
+    return
+AddonsDialog._onAddonItemSelected = _onAddonItemSelectedMod
+
+# def restart_anki():
+#     anki_exe = sys.executable
+#     # Только имя исполняемого файла, без аргументов, иначе Anki подумает что ему передали .apkg
+#     subprocess.Popen([anki_exe])
+#     # Закрываем текущую Anki после запуска новой
+#     QTimer.singleShot(100, mw.close)  
