@@ -1,6 +1,10 @@
 # Anki_Add-ons-window-Sort-Colors-Hint
 Add-on for the Anki program. For the window with add-ons, it implements the ability to sort and color the list, it is possible to set a hint for a specific add-on.
 
+**Changes for version 1.6**
+
+Added a filter field (the value is remembered and will work on the next launch)
+
 **Changes for version 1.5**
 
 The confusion over transparency, where color codes are specified as #AARRGGBB in QColor (in QT) or as #RRGGBBAA for CSS (in HTML), made it difficult to decide which is more convenient. CSS is ultimately preferable, so I've clearly chosen the #RRGGBBAA color format for user presentation.
@@ -36,6 +40,7 @@ All this functionality simplifies working with add-ons, since you can highlight 
 If you have a question or suggestion, do not create an issue on this site, but go to the dedicated topic [on the forum](https://forums.ankiweb.net/t/add-ons-window-sort-colors-hint-official-support/58646)
 
 **VERSIONS**
+- 1.6, date: 2026-08-16. Added a filter field (the value is remembered and will work on the next launch)
 - 1.5, date: 2026-08-15. #RRGGBBAA color format for user presentation. Improved restart algorithm
 - 1.4, date: 2026-02-22. The restart algorithm has been corrected as much as possible. Fixed display in transparent color.
 - 1.3, date: 2025-05-26. Ability to quickly load a profile of allowed add-ons. After selecting a profile, you can quickly restart the anki program using the hotkeys Alt+Shift+F4 After pressing the "Restore Defaults" button, 2 buttons may be displayed allowing you to quickly move to the line highlighted in red. This is how duplicate lines are shown if the user has previously changed something to suit his preferences and he is now given the opportunity to delete the extra lower (new) line if he needs to leave the value as it was before. Added backward substring search  
